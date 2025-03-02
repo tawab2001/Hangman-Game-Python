@@ -1,0 +1,105 @@
+
+
+
+import random
+
+wins = 0
+losses = 0
+name = ""
+
+players_data = {}
+try:
+    with open("output.txt", "r") as file:
+        for line in file:
+            parts = line.strip().split(":")
+            if len(parts) == 3:
+                stored_name = parts[0].strip()
+                try:
+                    stored_wins = int(parts[1].strip())
+                    stored_losses = int(parts[2].strip())
+                    players_data[stored_name] = (stored_wins, stored_losses)
+                except ValueError:
+                    print(f"Warning: Corrupted data for {stored_name}. Resetting their score.")
+except FileNotFoundError:
+    pass
+
+def hangman():
+    global wins, losses, name
+
+    name_players = ["messi", "ronaldo", "neymar", "mbappe", "haaland", "benzema", "modric", "salah", "debruyne"]
+    programming_lang = ["python", "java", "javascript"]
+
+    print("Welcome to Hangman game!")
+    name = input("Enter your name: ").strip()
+
+    if name in players_data:
+        wins, losses = players_data[name]
+    else:
+        wins, losses = 0, 0
+
+    while True:
+        print(f"Welcome {name}! Choose a category:")
+        print("1. Football Players")
+        print("2. Programming Languages")
+        category = input("Enter 1 or 2: ").strip()
+
+        if category == "1":
+            word = random.choice(name_players)
+            print("Guess the footballer's name!")
+            break
+        elif category == "2":
+            word = random.choice(programming_lang)
+            print("Guess the programming language!")
+            break
+        else:
+            print("Invalid choice. Please enter 1 or 2.")
+
+    your_word = ["_"] * len(word)
+    letters = set()
+    attempts = 7
+
+    # print(" ".join(your_word))
+
+    while attempts > 0:
+        guess_ch= input("Guess a letter: ").lower()
+
+        if guess_ch == "exit":
+         print(f"Thanks for playing! The correct word was: {word}")
+         return
+        
+        if len(guess_ch) != 1 or not guess_ch.isalpha() or guess_ch in letters:
+         print("Invalid input! Either not a single letter or already guessed. Try again.")
+         continue
+
+        if guess_ch in word:
+            print(f"Good job! The letter '{guess_ch}' is in the word.")
+            for i in range(len(word)):
+                if word[i] == guess_ch:
+                    your_word[i] = guess_ch
+                    print(" ".join(your_word))
+        else:
+            print(f"Sorry, the letter '{guess_ch}' is not in the word.")
+            attempts -= 1
+            print(f"You have {attempts} attempts left.")
+
+        # print(" ".join(your_word))
+
+        if "_" not in your_word:
+            print(f"Congratulations! You've guessed the word: {word}")
+            wins += 1
+            break
+
+    if attempts == 0:
+        print(f"Game over. The correct word was: {word}")
+        losses += 1
+
+    players_data[name] = (wins, losses)
+
+    with open("output.txt", "w") as file:
+        for player, (player_wins, player_losses) in players_data.items():
+            file.write(f"{player}:{player_wins}:{player_losses}\n")
+            
+
+hangman()
+
+
