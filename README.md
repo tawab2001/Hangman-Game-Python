@@ -27,8 +27,6 @@ Hangman is a classic word-guessing game where you try to guess the hidden word o
 ✔ Simple and easy to play.  
 ✔ Ability to exit anytime by typing **"exit"**.  
 
-## 📷 Screenshot  
-(You can add a screenshot of the game here)  
 
-## 🏆 Credits  
-This project was part of my ITI Python course. Special thanks to **[Instructor's Name]** for guidance and support. 🙌  
+
+
